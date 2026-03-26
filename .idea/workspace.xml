@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="eb3c4a5c-87f1-4879-b068-c98023b3f5f9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/banking/.specify/scripts/powershell/create-new-feature.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/banking/specs/1-transaction-history-pagination/checklists/requirements.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/banking/specs/add-transaction-statement/checklists/statement.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/banking/specs/add-transaction-statement/spec.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/banking/src/main/resources/db/migration/V7__add_statement_to_transactions.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/8.14/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/8.14/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/8.14/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/8.14/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/8.14/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/8.14/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/8.14/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/8.14/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/8.14/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/8.14/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/banking/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/banking/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/controller/AccountController.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/controller/AccountController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/dto/response/TransactionResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/dto/response/TransactionResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/entity/Transaction$TransactionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/entity/Transaction$TransactionBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/entity/Transaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/entity/Transaction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/repository/TransactionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/repository/TransactionRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/service/AccountService.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/service/AccountService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/service/impl/AccountServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/classes/java/main/com/bank/service/impl/AccountServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/resources/main/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/resources/main/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/banking/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/banking/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/java/com/bank/controller/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/java/com/bank/controller/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/java/com/bank/dto/response/TransactionResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/java/com/bank/dto/response/TransactionResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/java/com/bank/entity/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/java/com/bank/entity/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/java/com/bank/repository/TransactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/java/com/bank/repository/TransactionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/java/com/bank/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/java/com/bank/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/java/com/bank/service/impl/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/java/com/bank/service/impl/AccountServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/banking/src/test/java/com/bank/controller/BankingControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/banking/src/test/java/com/bank/controller/BankingControllerTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/lenovo/Downloads/banking" value="3BCViRzc52dcQK9NhJoXUNu95lE" />
+    </persistenceIdMap>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/banking" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Sukumar-cmd123&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Sukumar-cmd123/Sukumar.git&quot;,
+    &quot;accountId&quot;: &quot;12336cb0-da30-4add-bf78-1cf6452afc1a&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="3BCViRzc52dcQK9NhJoXUNu95lE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "1-transaction-history-pagination",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/lenovo/Downloads/banking",
+    "settings.editor.selected.configurable": "preferences.keymap"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eb3c4a5c-87f1-4879-b068-c98023b3f5f9" name="Changes" comment="" />
+      <created>1773993166597</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1773993166597</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
