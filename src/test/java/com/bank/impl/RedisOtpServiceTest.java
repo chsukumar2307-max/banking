@@ -86,6 +86,9 @@ class RedisOtpServiceTest {
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         MockitoAnnotations.openMocks(this);
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+        // Default stubs to avoid NPEs in tests
+        when(redisTemplate.hasKey(anyString())).thenReturn(false);
+        when(valueOperations.get(any())).thenReturn(null);
         // Avoid hitting rate limits in tests unless explicitly testing for them
         Field maxOtpAttemptsField = redisOtpService.getClass().getDeclaredField("maxOtpAttempts");
         maxOtpAttemptsField.setAccessible(true);
@@ -93,6 +96,16 @@ class RedisOtpServiceTest {
         Field maxFailedVerifyField = redisOtpService.getClass().getDeclaredField("maxFailedVerify");
         maxFailedVerifyField.setAccessible(true);
         maxFailedVerifyField.set(redisOtpService, 100);
+        // Set all config fields to safe values to avoid NPEs
+        Field ttlSecondsField = redisOtpService.getClass().getDeclaredField("ttlSeconds");
+        ttlSecondsField.setAccessible(true);
+        ttlSecondsField.set(redisOtpService, 300L);
+        Field rateLimitMinutesField = redisOtpService.getClass().getDeclaredField("rateLimitMinutes");
+        rateLimitMinutesField.setAccessible(true);
+        rateLimitMinutesField.set(redisOtpService, 5);
+        Field failAttemptsWindowMinutesField = redisOtpService.getClass().getDeclaredField("failAttemptsWindowMinutes");
+        failAttemptsWindowMinutesField.setAccessible(true);
+        failAttemptsWindowMinutesField.set(redisOtpService, 10);
     }
 
     @Test

@@ -88,8 +88,8 @@ public class RedisOtpService implements OtpService {
             throw new InvalidOtpException("Internal error: Redis key is invalid");
         }
 
-        Boolean hasKey = redisTemplate.hasKey(redisKey); // Sonar false positive: Boolean.TRUE.equals(hasKey) is null-safe
-        if (Boolean.TRUE.equals(hasKey)) {
+        Boolean hasKey = redisTemplate.hasKey(redisKey); // null-safe
+        if (Boolean.TRUE == hasKey) {
             log.warn("OTP already sent for user: {}. Please wait.", username);
             throw new InvalidOtpException(ERR_OTP_ALREADY_SENT);
         }
