@@ -28,6 +28,8 @@ repositories {
 }
 
 dependencies {
+    // CVE REMEDIATION: Ensure safe version of commons-compress for test dependencies
+    testImplementation 'org.apache.commons:commons-compress:1.26.1'
 
     // ===============================
     // 🌱 SPRING BOOT STARTERS
@@ -89,8 +91,13 @@ dependencies {
     testImplementation 'com.h2database:h2:2.2.224'
 
     // Optional (Integration Testing)
-    testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
-    testImplementation 'org.testcontainers:mysql:1.19.7'
+    testImplementation('org.testcontainers:junit-jupiter:1.19.7') {
+        exclude group: 'org.apache.commons', module: 'commons-compress'
+    }
+    testImplementation('org.testcontainers:mysql:1.19.7') {
+        exclude group: 'org.apache.commons', module: 'commons-compress'
+    }
+    testImplementation 'org.apache.commons:commons-compress:1.26.1'
 
     // ===============================
     // 🌱 ENVIRONMENT VARIABLE LOADER

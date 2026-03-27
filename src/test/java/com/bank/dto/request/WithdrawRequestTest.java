@@ -14,8 +14,9 @@ class WithdrawRequestTest {
     private final Validator validator;
 
     public WithdrawRequestTest() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     @Test
@@ -70,4 +71,3 @@ class WithdrawRequestTest {
         assertTrue(req1.toString().contains("ACC123"));
     }
 }
-

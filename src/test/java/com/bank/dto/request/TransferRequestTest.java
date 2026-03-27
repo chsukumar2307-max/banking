@@ -14,8 +14,9 @@ class TransferRequestTest {
     private final Validator validator;
 
     public TransferRequestTest() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     @Test
@@ -87,4 +88,3 @@ class TransferRequestTest {
         assertTrue(req1.toString().contains("ACC1"));
     }
 }
-

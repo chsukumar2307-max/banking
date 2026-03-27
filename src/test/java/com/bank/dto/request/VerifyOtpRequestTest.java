@@ -13,8 +13,9 @@ class VerifyOtpRequestTest {
     private final Validator validator;
 
     public VerifyOtpRequestTest() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     @Test
