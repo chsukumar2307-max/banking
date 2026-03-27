@@ -3,6 +3,8 @@ import com.bank.service.impl.AccessTokenBlacklistService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -55,14 +57,6 @@ class JwtAuthenticationFilterTest {
     @AfterEach
     void tearDown() throws Exception {
         mocks.close();
-    }
-
-    @Test
-    void doFilterInternal_swaggerBypass() throws ServletException, IOException {
-        when(request.getServletPath()).thenReturn("/swagger-ui/index.html");
-        filter.doFilterInternal(request, response, filterChain);
-        verify(filterChain).doFilter(request, response);
-        verifyNoInteractions(jwtUtil, userDetailsService, accessTokenBlacklistService);
     }
 
     @Test
@@ -177,5 +171,16 @@ class JwtAuthenticationFilterTest {
         filter.doFilterInternal(request, response, filterChain);
         assertNull(SecurityContextHolder.getContext().getAuthentication());
         verify(filterChain).doFilter(request, response);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/swagger-ui/index.html", "/v3/api-docs", "/swagger-resources"})
+    void doFilterInternal_bypassPaths(String path) throws ServletException, IOException {
+        when(request.getServletPath()).thenReturn(path);
+        filter.doFilterInternal(request, response, filterChain);
+        verify(filterChain).doFilter(request, response);
+        verifyNoInteractions(jwtUtil);
+        verifyNoInteractions(userDetailsService);
+        verifyNoInteractions(accessTokenBlacklistService);
     }
 }

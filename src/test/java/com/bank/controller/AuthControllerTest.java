@@ -224,14 +224,14 @@ class AuthControllerTest {
     }
 
     @Test
-    void refreshToken_invalid() throws Exception {
+    void refreshToken_invalidToken_returnsUnauthorized() throws Exception {
         RefreshTokenRequest req = new RefreshTokenRequest();
-        req.setRefreshToken("bad");
-        doThrow(new IllegalArgumentException("Invalid refresh token")).when(authService).logout(anyString(), anyString());
+        req.setRefreshToken("badtoken");
+        when(jwtUtil.isRefreshTokenInvalid("badtoken")).thenReturn(true);
         mockMvc.perform(post("/api/auth/refresh-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isUnauthorized()); // Accepts default error structure
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -258,6 +258,58 @@ class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Invalid refresh token"));
+    }
+
+    @Test
+    void logout_noAuthorizationHeader_returnsOk() throws Exception {
+        RefreshTokenRequest req = new RefreshTokenRequest();
+        req.setRefreshToken("refresh");
+        when(authService.logout(eq("refresh"), isNull())).thenReturn(new MessageResponse("Logout successful. Tokens expired."));
+        mockMvc.perform(post("/api/auth/logout")
+                .header("Authorization", "") // Explicitly set empty header
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Logout successful. Tokens expired."));
+    }
+
+    @Test
+    void logout_nonBearerAuthorizationHeader_returnsOk() throws Exception {
+        RefreshTokenRequest req = new RefreshTokenRequest();
+        req.setRefreshToken("refresh");
+        when(authService.logout(eq("refresh"), isNull())).thenReturn(new MessageResponse("Logout successful. Tokens expired."));
+        mockMvc.perform(post("/api/auth/logout")
+                .header("Authorization", "NotBearer sometoken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Logout successful. Tokens expired."));
+    }
+
+    @Test
+    void refreshToken_storedTokenNull_returnsUnauthorized() throws Exception {
+        RefreshTokenRequest req = new RefreshTokenRequest();
+        req.setRefreshToken("refresh");
+        when(jwtUtil.isRefreshTokenInvalid("refresh")).thenReturn(false);
+        when(jwtUtil.extractUsername("refresh")).thenReturn("user");
+        when(refreshTokenService.getRefreshToken("user")).thenReturn(null);
+        mockMvc.perform(post("/api/auth/refresh-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void logout_messageContainsNotFound_returnsUnauthorized() throws Exception {
+        RefreshTokenRequest req = new RefreshTokenRequest();
+        req.setRefreshToken("refresh");
+        when(authService.logout(anyString(), anyString())).thenReturn(new MessageResponse("Refresh token not found"));
+        mockMvc.perform(post("/api/auth/logout")
+                .header("Authorization", "Bearer accessToken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Refresh token not found"));
     }
 
     // Additional endpoint tests will be added here for full coverage

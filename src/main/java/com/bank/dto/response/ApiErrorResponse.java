@@ -1,4 +1,4 @@
-package com.bank.exception;
+package com.bank.dto.response;
 import lombok.Builder;
 import lombok.Data;
 import java.time.Instant;

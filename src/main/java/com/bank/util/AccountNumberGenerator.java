@@ -9,9 +9,9 @@ public class AccountNumberGenerator {
 	private final SecureRandom secureRandom = new SecureRandom();
 
 	public String generate() {
-        int min = (int) Math.pow(10.0, DIGITS - 1);
+        int min = (int) Math.pow(10.0, (double) DIGITS - 1);
         int maxExclusive = (int) Math.pow(10.0, DIGITS);
-        int n = secureRandom.nextInt((int)(maxExclusive - (double)min)) + min;
+        int n = secureRandom.nextInt(maxExclusive - min) + min;
         return PREFIX + n;
     }
 }

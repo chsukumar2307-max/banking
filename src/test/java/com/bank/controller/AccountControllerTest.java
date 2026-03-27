@@ -392,4 +392,26 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.status").value("Deposit successful"))
                 .andExpect(jsonPath("$.balance").value(1000000005000L));
     }
+
+    @Test
+    void transactionsHistoryByFilter_emptyKeyAndValue_returnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/accounts/transactionsHistory/="))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("[]"));
+    }
+
+    @Test
+    void transactionsHistoryByFilter_accountNumberEmptyValue_returnsOkEmptyList() throws Exception {
+        when(accountService.searchTransactions(isNull(), eq(""), isNull(), isNull(), anyInt(), anyInt())).thenReturn(List.of());
+        mockMvc.perform(get("/api/accounts/transactionsHistory/accountNumber="))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void transactionsHistoryByFilter_emptyKey_returnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/accounts/transactionsHistory/=somevalue"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("[]"));
+    }
 }

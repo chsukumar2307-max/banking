@@ -40,4 +40,38 @@ class AuditLoggingAspectTest {
         // No implementation needed. Used only for reflection in tests.
         // SonarQube: This method is intentionally empty.
     }
+
+    @Test
+    void resolvePrincipal_returnsAnonymousWhenAuthNullOrNotAuthenticated() {
+        AuditLoggingAspect aspect = new AuditLoggingAspect();
+        // Mock SecurityContextHolder to return null authentication
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(null);
+        assertEquals("anonymous", aspect.resolvePrincipal());
+        // Mock authentication not authenticated
+        org.springframework.security.core.Authentication auth = mock(org.springframework.security.core.Authentication.class);
+        when(auth.isAuthenticated()).thenReturn(false);
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
+        assertEquals("anonymous", aspect.resolvePrincipal());
+    }
+
+    @Test
+    void resolvePrincipal_returnsNameWhenAuthenticated() {
+        AuditLoggingAspect aspect = new AuditLoggingAspect();
+        org.springframework.security.core.Authentication auth = mock(org.springframework.security.core.Authentication.class);
+        when(auth.isAuthenticated()).thenReturn(true);
+        when(auth.getName()).thenReturn("user1");
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
+        assertEquals("user1", aspect.resolvePrincipal());
+    }
+
+    @Test
+    void safeArgs_handlesNullArrayAndNullElementAndPasswordRedaction() {
+        AuditLoggingAspect aspect = new AuditLoggingAspect();
+        // args == null
+        assertEquals("[]", aspect.safeArgs(null));
+        // args contains null
+        assertTrue(aspect.safeArgs(new Object[]{null, "abc"}).contains("null"));
+        // args contains password string
+        assertTrue(aspect.safeArgs(new Object[]{"myPassword123"}).contains("[REDACTED]"));
+    }
 }

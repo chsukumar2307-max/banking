@@ -168,6 +168,13 @@ class AccountServiceImplTest {
     }
 
     @Test
+    void balance_blankAccountNumber_throws() {
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+                accountServiceImpl.balance(" "));
+        assertEquals("Account number must be provided", ex.getMessage());
+    }
+
+    @Test
     void transactions_success() {
         Customer customer = Customer.builder().accountNumber("123").build();
         when(customerRepository.findByAccountNumber("123")).thenReturn(Optional.of(customer));
@@ -184,6 +191,13 @@ class AccountServiceImplTest {
     void transactions_accountNotFound() {
         when(customerRepository.findByAccountNumber("123")).thenReturn(Optional.empty());
         assertThrows(AccountNotFoundException.class, () -> accountServiceImpl.transactions("123"));
+    }
+
+    @Test
+    void transactions_blankAccountNumber_throws() {
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+                accountServiceImpl.transactions(" "));
+        assertEquals("Account number must be provided", ex.getMessage());
     }
 
     // Helper to avoid unchecked warnings for Specification
@@ -255,5 +269,45 @@ class AccountServiceImplTest {
         // Custom pagination
         responses = accountServiceImpl.searchTransactions(null, null, null, null, 1, 5);
         assertEquals(1, responses.size());
+    }
+
+    @Test
+    void searchTransactions_pageSizeZero_fallbackToDefault() {
+        Transaction t = Transaction.builder().transactionId(6L).accountNumber("888").transactionType(TransactionType.DEPOSIT)
+                .amount(BigDecimal.TEN).balanceAfterTransaction(BigDecimal.TEN).transactionDate(java.time.Instant.now())
+                .status(TransactionStatus.SUCCESS).statement("Deposit").build();
+        when(transactionRepository.findAll(anyTransactionSpecification(), any(Pageable.class)))
+                .thenReturn(new org.springframework.data.domain.PageImpl<>(List.of(t)));
+        List<TransactionResponse> responses = accountServiceImpl.searchTransactions(null, null, null, null, 0, 0);
+        assertEquals(1, responses.size());
+    }
+
+    @Test
+    void searchTransactions_invalidTransactionDate_logsAndIgnores() {
+        Transaction t = Transaction.builder().transactionId(7L).accountNumber("888").transactionType(TransactionType.DEPOSIT)
+                .amount(BigDecimal.TEN).balanceAfterTransaction(BigDecimal.TEN).transactionDate(java.time.Instant.now())
+                .status(TransactionStatus.SUCCESS).statement("Deposit").build();
+        when(transactionRepository.findAll(anyTransactionSpecification(), any(Pageable.class)))
+                .thenReturn(new org.springframework.data.domain.PageImpl<>(List.of(t)));
+        List<TransactionResponse> responses = accountServiceImpl.searchTransactions(null, null, "not-a-date", null, 0, 10);
+        assertEquals(1, responses.size());
+    }
+
+    @Test
+    void searchTransactions_invalidTransactionType_logsAndIgnores() {
+        Transaction t = Transaction.builder().transactionId(8L).accountNumber("888").transactionType(TransactionType.DEPOSIT)
+                .amount(BigDecimal.TEN).balanceAfterTransaction(BigDecimal.TEN).transactionDate(java.time.Instant.now())
+                .status(TransactionStatus.SUCCESS).statement("Deposit").build();
+        when(transactionRepository.findAll(anyTransactionSpecification(), any(Pageable.class)))
+                .thenReturn(new org.springframework.data.domain.PageImpl<>(List.of(t)));
+        List<TransactionResponse> responses = accountServiceImpl.searchTransactions(null, null, null, "NOT_A_TYPE", 0, 10);
+        assertEquals(1, responses.size());
+    }
+
+    @Test
+    void searchTransactions_nullCustomerReferenceInTransfer_throws() {
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+                accountServiceImpl.transfer(null, "B", BigDecimal.TEN));
+        assertTrue(ex.getMessage().contains("Transfer amount must be positive and account numbers must be provided"));
     }
 }

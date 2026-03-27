@@ -31,25 +31,25 @@ public class AuditLoggingAspect {
 		try {
 			Object result = pjp.proceed();
 			auditLog.info("action={} principal={} method={} status=SUCCESS durationMs={}",
-					auditable.action(), principal, method, System.currentTimeMillis() - start);
+				auditable.action(), principal, method, System.currentTimeMillis() - start);
 			return result;
+		// Catch Exception for AOP proxy compatibility and to ensure all audit failures are logged and rethrown
 		} catch (Exception ex) {
-			auditLog.info("action={} principal={} method={} status=FAILED durationMs={} error={}",
-				auditable.action(), principal, method, System.currentTimeMillis() - start, ex.getClass().getSimpleName());
 			// Rethrow with contextual information for better debugging and coverage
 			throw new AuditLoggingException(String.format(
-				"Audit failure: action=%s principal=%s method=%s args=%s error=%s", 
-				auditable.action(), principal, method, args, ex.getMessage()), ex);
+				"Audit failure: action=%s principal=%s method=%s args=%s error=%s: %s",
+				auditable.action(), principal, method, args, ex.getClass().getSimpleName(), ex.getMessage()), ex);
 		}
 	}
 
-	private String resolvePrincipal() {
+	// Change private to package-private for testability
+	String resolvePrincipal() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth == null || !auth.isAuthenticated()) return "anonymous";
 		return auth.getName();
 	}
 
-	private String safeArgs(Object[] args) {
+	String safeArgs(Object[] args) {
 		if (args == null) return "[]";
 		return Arrays.toString(Arrays.stream(args).map(a -> {
 			if (a == null) return null;

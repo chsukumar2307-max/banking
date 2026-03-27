@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @Data
@@ -49,5 +50,38 @@ public class Customer {
 		if (balance == null) balance = BigDecimal.ZERO;
 		if (status == null) status = CustomerStatus.ACTIVE;
 	}
-}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Customer customer = (Customer) o;
+		return Objects.equals(id, customer.id) &&
+				Objects.equals(username, customer.username) &&
+				Objects.equals(mobileNumber, customer.mobileNumber) &&
+				Objects.equals(password, customer.password) &&
+				Objects.equals(accountNumber, customer.accountNumber) &&
+				Objects.equals(balance, customer.balance) &&
+				status == customer.status &&
+				Objects.equals(createdAt, customer.createdAt);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, username, mobileNumber, password, accountNumber, balance, status, createdAt);
+	}
+
+	@Override
+	public String toString() {
+		return "Customer{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", mobileNumber='" + mobileNumber + '\'' +
+				", password='" + password + '\'' +
+				", accountNumber='" + accountNumber + '\'' +
+				", balance=" + balance +
+				", status=" + status +
+				", createdAt=" + createdAt +
+				'}';
+	}
+}

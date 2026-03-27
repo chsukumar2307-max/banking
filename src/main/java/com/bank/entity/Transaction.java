@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @Data
@@ -46,5 +47,39 @@ public class Transaction {
 	void onCreate() {
 		if (transactionDate == null) transactionDate = Instant.now();
 		if (status == null) status = TransactionStatus.SUCCESS;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Transaction that = (Transaction) o;
+		return Objects.equals(transactionId, that.transactionId) &&
+				Objects.equals(accountNumber, that.accountNumber) &&
+				transactionType == that.transactionType &&
+				Objects.equals(amount, that.amount) &&
+				Objects.equals(balanceAfterTransaction, that.balanceAfterTransaction) &&
+				Objects.equals(transactionDate, that.transactionDate) &&
+				status == that.status &&
+				Objects.equals(statement, that.statement);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(transactionId, accountNumber, transactionType, amount, balanceAfterTransaction, transactionDate, status, statement);
+	}
+
+	@Override
+	public String toString() {
+		return "Transaction{" +
+				"transactionId=" + transactionId +
+				", accountNumber='" + accountNumber + '\'' +
+				", transactionType=" + transactionType +
+				", amount=" + amount +
+				", balanceAfterTransaction=" + balanceAfterTransaction +
+				", transactionDate=" + transactionDate +
+				", status=" + status +
+				", statement='" + statement + '\'' +
+				'}';
 	}
 }
