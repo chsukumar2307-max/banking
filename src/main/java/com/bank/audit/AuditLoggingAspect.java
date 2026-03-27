@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import com.bank.exception.AuditLoggingException;
 
-@SuppressWarnings("unused")
 @Aspect
 @Component
 public class AuditLoggingAspect {
@@ -19,8 +18,10 @@ public class AuditLoggingAspect {
 
 	/**
 	 * Required by Spring AOP for around advice. Return value may be unused for void methods.
+	 *
+	 * Suppress Sonar/IDE warning: 'Return value of the method is never used'.
 	 */
-	@SuppressWarnings("java:S2184")
+	@SuppressWarnings({"java:S2184", "unused"})
 	@Around("@annotation(com.bank.audit.Auditable)")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable {
 		MethodSignature sig = (MethodSignature) pjp.getSignature();
