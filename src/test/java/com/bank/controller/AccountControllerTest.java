@@ -37,8 +37,10 @@ import org.springframework.context.annotation.Import;
 @Import(com.bank.exception.GlobalExceptionHandler.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AccountControllerTest {
+    @SuppressWarnings("unused")
     @Autowired
     private MockMvc mockMvc;
+    @SuppressWarnings("unused")
     @MockBean
     private AccountService accountService;
     private final ObjectMapper objectMapper = new ObjectMapper();

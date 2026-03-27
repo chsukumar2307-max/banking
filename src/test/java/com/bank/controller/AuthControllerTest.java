@@ -18,19 +18,26 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+@SuppressWarnings("unused") // Suppress unused field warnings for Spring Boot test injection
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
+    @SuppressWarnings("unused")
     @Autowired
     private MockMvc mockMvc;
+    @SuppressWarnings("unused")
     @MockBean
     private AuthService authService;
+    @SuppressWarnings("unused")
     @MockBean
     private JwtUtil jwtUtil;
+    @SuppressWarnings("unused")
     @MockBean
     private RefreshTokenService refreshTokenService;
+    @SuppressWarnings("unused")
     @MockBean
     private com.bank.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+    @SuppressWarnings("unused")
     @MockBean
     private com.bank.security.CustomerUserDetailsService customerUserDetailsService;
     private final ObjectMapper objectMapper = new ObjectMapper();

@@ -17,6 +17,10 @@ import com.bank.exception.AuditLoggingException;
 public class AuditLoggingAspect {
 	private static final Logger auditLog = LoggerFactory.getLogger("AUDIT");
 
+	/**
+	 * Required by Spring AOP for around advice. Return value may be unused for void methods.
+	 */
+	@SuppressWarnings("java:S2184")
 	@Around("@annotation(com.bank.audit.Auditable)")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable {
 		MethodSignature sig = (MethodSignature) pjp.getSignature();

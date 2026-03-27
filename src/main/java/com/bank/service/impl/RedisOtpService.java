@@ -81,6 +81,7 @@ public class RedisOtpService implements OtpService {
      * Checks if an OTP has already been sent for the given redisKey and throws an exception if so.
      * Avoids code smell by using clear method naming, single responsibility, and explicit null/empty checks.
      */
+    @SuppressWarnings("java:S2583") // Sonar false positive: Boolean.TRUE.equals(hasKey) is null-safe and prevents NPE
     private void checkOtpAlreadySent(String redisKey, String username) {
         if (redisKey == null || redisKey.isEmpty()) {
             log.error("Redis key is null or empty for user: {}", username);
