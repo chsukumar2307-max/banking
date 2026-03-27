@@ -1,4 +1,5 @@
 package com.bank.entity;
+import com.bank.enums.CustomerStatus;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.Instant;

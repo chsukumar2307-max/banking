@@ -25,7 +25,7 @@ public class RedisRefreshTokenService implements RefreshTokenService {
     public void storeRefreshToken(String username, String refreshToken, long expirySeconds) {
         if (!isValid(username, refreshToken)) {
             log.warn(ERROR_BLANK_INPUT + " (username: '{}', token: '{}')", username, refreshToken);
-            return;
+            throw new IllegalArgumentException(ERROR_BLANK_INPUT);
         }
         try {
             redisTemplate.opsForValue().set(buildKey(username), refreshToken, expirySeconds, TimeUnit.SECONDS);
@@ -53,7 +53,7 @@ public class RedisRefreshTokenService implements RefreshTokenService {
     public void deleteRefreshToken(String username) {
         if (!StringUtils.hasText(username)) {
             log.warn("Username is blank, cannot delete refresh token.");
-            return;
+            throw new IllegalArgumentException("Username is blank, cannot delete refresh token.");
         }
         try {
             redisTemplate.delete(buildKey(username));

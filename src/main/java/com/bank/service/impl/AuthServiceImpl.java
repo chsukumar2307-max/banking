@@ -3,10 +3,10 @@ import com.bank.dto.response.CheckCustomerResponse;
 import com.bank.dto.response.LoginResponse;
 import com.bank.dto.response.MessageResponse;
 import com.bank.entity.Customer;
-import com.bank.entity.CustomerStatus;
+import com.bank.enums.CustomerStatus;
 import com.bank.exception.UnauthorizedAccessException;
 import com.bank.repository.CustomerRepository;
-import com.bank.security.JwtUtil;
+import com.bank.util.JwtUtil;
 import com.bank.service.AuthService;
 import com.bank.service.OtpService;
 import com.bank.service.RefreshTokenService;
@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
             otpService.verifyOtp(username, mobileNumber, otp);
             if (customerRepository.existsByUsernameAndMobileNumber(username, mobileNumber)) {
                 log.info("Customer already exists after OTP verification: {}", username);
-                return;
+                throw new IllegalStateException("Customer already exists after OTP verification");
             }
             if (isBlank(rawPassword)) {
                 log.warn("Password is required for account creation: username={}", username);

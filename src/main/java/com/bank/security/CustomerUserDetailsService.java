@@ -1,6 +1,6 @@
 package com.bank.security;
 import com.bank.entity.Customer;
-import com.bank.entity.CustomerStatus;
+import com.bank.enums.CustomerStatus;
 import com.bank.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

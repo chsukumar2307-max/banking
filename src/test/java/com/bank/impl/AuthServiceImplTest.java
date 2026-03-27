@@ -3,10 +3,10 @@ import com.bank.dto.response.CheckCustomerResponse;
 import com.bank.dto.response.LoginResponse;
 import com.bank.dto.response.MessageResponse;
 import com.bank.entity.Customer;
-import com.bank.entity.CustomerStatus;
+import com.bank.enums.CustomerStatus;
 import com.bank.exception.UnauthorizedAccessException;
 import com.bank.repository.CustomerRepository;
-import com.bank.security.JwtUtil;
+import com.bank.util.JwtUtil;
 import com.bank.service.OtpService;
 import com.bank.service.RefreshTokenService;
 import com.bank.service.impl.AccessTokenBlacklistService;
@@ -101,10 +101,10 @@ class AuthServiceImplTest {
     }
 
     @Test
-    void verifyOtpAndCreateAccount_existingCustomerAfterOtp() {
+    void verifyOtpAndCreateAccount_existingCustomerAfterOtp_throwsException() {
         when(customerRepository.existsByUsernameAndMobileNumber(anyString(), anyString())).thenReturn(true);
         doNothing().when(otpService).verifyOtp(anyString(), anyString(), anyString());
-        assertDoesNotThrow(() -> authServiceImpl.verifyOtpAndCreateAccount("user", "123", "otp", "pass"));
+        assertThrows(IllegalStateException.class, () -> authServiceImpl.verifyOtpAndCreateAccount("user", "1234567890", "otp", "password"));
     }
 
     @Test

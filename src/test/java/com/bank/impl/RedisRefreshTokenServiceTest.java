@@ -49,10 +49,9 @@ class RedisRefreshTokenServiceTest {
     }
 
     @Test
-    void storeRefreshToken_blankUsernameOrToken_doesNotStore() {
-        redisRefreshTokenService.storeRefreshToken("", "token", 3600);
-        redisRefreshTokenService.storeRefreshToken("user", "", 3600);
-        verify(valueOperations, never()).set(anyString(), anyString(), anyLong(), any(TimeUnit.class));
+    void storeRefreshToken_blankUsernameOrToken_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> redisRefreshTokenService.storeRefreshToken("", "token", 3600));
+        assertThrows(IllegalArgumentException.class, () -> redisRefreshTokenService.storeRefreshToken("user", "", 3600));
     }
 
     @Test
@@ -62,9 +61,8 @@ class RedisRefreshTokenServiceTest {
     }
 
     @Test
-    void deleteRefreshToken_blankUsername_doesNothing() {
-        redisRefreshTokenService.deleteRefreshToken("");
-        verify(redisTemplate, never()).delete(anyString());
+    void deleteRefreshToken_blankUsername_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> redisRefreshTokenService.deleteRefreshToken(""));
     }
 
     @Test

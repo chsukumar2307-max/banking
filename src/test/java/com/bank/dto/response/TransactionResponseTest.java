@@ -1,6 +1,6 @@
 package com.bank.dto.response;
-import com.bank.entity.TransactionStatus;
-import com.bank.entity.TransactionType;
+import com.bank.enums.TransactionStatus;
+import com.bank.enums.TransactionType;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.Instant;

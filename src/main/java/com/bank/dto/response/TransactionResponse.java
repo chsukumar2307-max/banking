@@ -1,6 +1,6 @@
 package com.bank.dto.response;
-import com.bank.entity.TransactionStatus;
-import com.bank.entity.TransactionType;
+import com.bank.enums.TransactionStatus;
+import com.bank.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

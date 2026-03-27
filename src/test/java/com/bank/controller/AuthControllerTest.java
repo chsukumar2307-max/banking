@@ -2,7 +2,8 @@ package com.bank.controller;
 import com.bank.dto.request.*;
 import com.bank.dto.response.*;
 import com.bank.service.AuthService;
-import com.bank.security.JwtUtil;
+import com.bank.util.JwtAuthenticationFilter;
+import com.bank.util.JwtUtil;
 import com.bank.service.RefreshTokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bank.exception.InvalidOtpException;
 import com.bank.exception.UnauthorizedAccessException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unused") // Suppress unused field warnings for Spring Boot test injection
 @WebMvcTest(AuthController.class)
@@ -36,7 +41,7 @@ class AuthControllerTest {
     private RefreshTokenService refreshTokenService;
     @SuppressWarnings("unused")
     @MockBean
-    private com.bank.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     @SuppressWarnings("unused")
     @MockBean
     private com.bank.security.CustomerUserDetailsService customerUserDetailsService;
@@ -230,16 +235,7 @@ class AuthControllerTest {
                 .andExpect(status().isUnauthorized()); // Accepts default error structure
     }
 
-    @Test
-    void refreshToken_invalidToken_returnsUnauthorized() throws Exception {
-        RefreshTokenRequest req = new RefreshTokenRequest();
-        req.setRefreshToken("badtoken");
-        when(jwtUtil.isRefreshTokenInvalid("badtoken")).thenReturn(true);
-        mockMvc.perform(post("/api/auth/refresh-token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isUnauthorized());
-    }
+    // ...existing code...
 
     @Test
     void logout_success() throws Exception {
@@ -317,6 +313,136 @@ class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Refresh token not found"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "null,true",
+        "'',true",
+        "'   ',true",
+        "abc,false"
+    })
+    void isBlank_variousInputs(String input, boolean expected) {
+        if ("null".equals(input)) input = null;
+        AuthController controller = new AuthController(null, null, null);
+        assertEquals(expected, controller.isBlank(input));
+    }
+
+    @Test
+    void extractAccessToken_nullHeader_returnsNull() {
+        AuthController controller = new AuthController(null, null, null);
+        assertNull(controller.extractAccessToken(null));
+    }
+
+    @Test
+    void extractAccessToken_nonBearerHeader_returnsNull() {
+        AuthController controller = new AuthController(null, null, null);
+        assertNull(controller.extractAccessToken("Token sometoken"));
+    }
+
+    @Test
+    void extractAccessToken_bearerHeader_returnsToken() {
+        AuthController controller = new AuthController(null, null, null);
+        assertEquals("sometoken", controller.extractAccessToken("Bearer sometoken"));
+    }
+
+    @Test
+    void extractAccessToken_bearerHeaderNoToken_returnsEmptyString() {
+        AuthController controller = new AuthController(null, null, null);
+        assertEquals("", controller.extractAccessToken("Bearer "));
+    }
+
+    @Test
+    void checkCustomer_nullRequest_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/auth/check-customer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Malformed JSON request"));
+    }
+
+    @Test
+    void generateOtp_nullRequest_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/auth/generate-otp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Malformed JSON request"));
+    }
+
+    @Test
+    void verifyOtp_nullRequest_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/auth/verify-otp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Malformed JSON request"));
+    }
+
+    @Test
+    void verifyOtp_blankFields_returnsBadRequest() throws Exception {
+        VerifyOtpRequest req = new VerifyOtpRequest();
+        req.setUsername("");
+        req.setMobileNumber("");
+        req.setOtp("");
+        req.setPassword("");
+        mockMvc.perform(post("/api/auth/verify-otp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.username").value("must not be blank"))
+                .andExpect(jsonPath("$.mobileNumber").value("must not be blank"))
+                .andExpect(jsonPath("$.otp").value("must not be blank"))
+                .andExpect(jsonPath("$.password").value("must not be blank"));
+    }
+
+    @Test
+    void login_nullRequest_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void login_blankUsername_returnsBadRequest() throws Exception {
+        LoginRequest req = new LoginRequest();
+        req.setUsername("");
+        req.setPassword("password");
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void refreshToken_nullRequest_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/auth/refresh-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Malformed JSON request"));
+    }
+
+    @Test
+    void refreshToken_blankToken_returnsUnauthorized() throws Exception {
+        RefreshTokenRequest req = new RefreshTokenRequest();
+        req.setRefreshToken("");
+        mockMvc.perform(post("/api/auth/refresh-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void refreshToken_invalidToken_returnsUnauthorized() throws Exception {
+        RefreshTokenRequest req = new RefreshTokenRequest();
+        req.setRefreshToken("invalid");
+        when(jwtUtil.isRefreshTokenInvalid("invalid")).thenReturn(true);
+        mockMvc.perform(post("/api/auth/refresh-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isUnauthorized());
     }
 
     // Additional endpoint tests will be added here for full coverage

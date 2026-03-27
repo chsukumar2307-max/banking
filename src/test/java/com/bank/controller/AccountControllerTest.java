@@ -2,6 +2,7 @@ package com.bank.controller;
 import com.bank.dto.request.*;
 import com.bank.dto.response.*;
 import com.bank.service.AccountService;
+import com.bank.util.JwtAuthenticationFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,7 +28,7 @@ import org.springframework.context.annotation.Import;
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.bank.audit.AuditLoggingAspect.class),
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.bank.security.SecurityConfig.class),
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.bank.security.JwtAuthenticationFilter.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthenticationFilter.class),
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.bank.config.SwaggerConfig.class),
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.bank.config.TwilioConfig.class),
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.bank.config.RedisConfig.class)

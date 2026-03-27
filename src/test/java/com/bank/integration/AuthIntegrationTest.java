@@ -1,9 +1,6 @@
 package com.bank.integration;
 import com.bank.dto.request.*;
 import com.bank.dto.response.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -17,50 +14,47 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.DockerClientFactory;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuthIntegrationTest {
     private static MySQLContainer<?> mysql;
     private static GenericContainer<?> redis;
 
     @LocalServerPort
+    @SuppressWarnings("unused")
     private int port;
 
-    private static RestTemplate restTemplate;
+    private static final RestTemplate restTemplate = new RestTemplate();
 
     @BeforeAll
-    static void setup() {
-        Assumptions.assumeTrue(isDockerAvailable(), "Docker is not available, skipping integration tests.");
-        mysql = new MySQLContainer<>("mysql:8.3.0")
-                .withDatabaseName("testdb")
-                .withUsername("test")
-                .withPassword("test");
-        redis = new GenericContainer<>("redis:7").withExposedPorts(6379);
-        mysql.start();
-        redis.start();
-        restTemplate = new RestTemplate();
+    static void setUpContainers() {
+        try {
+            mysql = new MySQLContainer<>("mysql:8.3.0")
+                    .withDatabaseName("testdb")
+                    .withUsername("test")
+                    .withPassword("test");
+            redis = new GenericContainer<>("redis:7").withExposedPorts(6379);
+            mysql.start();
+            redis.start();
+        } catch (Exception e) {
+            Assumptions.assumeTrue(false, "Docker is not available or containers could not be started: " + e.getMessage());
+        }
     }
 
     @AfterAll
-    static void tearDown() {
+    static void tearDownContainers() {
         if (mysql != null) mysql.stop();
         if (redis != null) redis.stop();
     }
 
-    private static boolean isDockerAvailable() {
-        try {
-            return DockerClientFactory.instance().isDockerAvailable();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     @DynamicPropertySource
+    @SuppressWarnings("unused")
     static void registerProperties(DynamicPropertyRegistry registry) {
         if (mysql != null && mysql.isRunning() && redis != null && redis.isRunning()) {
             registry.add("spring.datasource.url", mysql::getJdbcUrl);

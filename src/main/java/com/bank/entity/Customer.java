@@ -1,4 +1,5 @@
 package com.bank.entity;
+import com.bank.enums.CustomerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;

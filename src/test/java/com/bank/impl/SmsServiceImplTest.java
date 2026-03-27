@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -53,7 +54,7 @@ class SmsServiceImplTest {
     }
 
     @Test
-    void sendOtp_twilioFailure_logsError() {
+    void sendOtp_twilioFailure_throwsException() {
         ReflectionTestUtils.setField(smsServiceImpl, "simulateSms", false);
         try (MockedStatic<com.twilio.Twilio> twilioMock = mockStatic(com.twilio.Twilio.class);
              MockedStatic<Message> messageMockStatic = mockStatic(Message.class)) {
@@ -62,27 +63,27 @@ class SmsServiceImplTest {
             when(creatorMock.create()).thenThrow(new RuntimeException("Twilio error"));
             messageMockStatic.when(() -> Message.creator(any(PhoneNumber.class), any(PhoneNumber.class), anyString()))
                     .thenReturn(creatorMock);
-            assertDoesNotThrow(() -> smsServiceImpl.sendOtp("+1111111111", "1234"));
+            assertThrows(RuntimeException.class, () -> smsServiceImpl.sendOtp("+1111111111", "1234"));
         }
     }
 
     @Test
-    void sendOtp_nullPhone_doesNotThrow() {
-        assertDoesNotThrow(() -> smsServiceImpl.sendOtp(null, "1234"));
+    void sendOtp_nullPhone_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> smsServiceImpl.sendOtp(null, "1234"));
     }
 
     @Test
-    void sendOtp_nullOtp_doesNotThrow() {
-        assertDoesNotThrow(() -> smsServiceImpl.sendOtp("+1111111111", null));
+    void sendOtp_nullOtp_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> smsServiceImpl.sendOtp("+1111111111", null));
     }
 
     @Test
-    void sendOtp_emptyPhone_doesNotThrow() {
-        assertDoesNotThrow(() -> smsServiceImpl.sendOtp("", "1234"));
+    void sendOtp_emptyPhone_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> smsServiceImpl.sendOtp("", "1234"));
     }
 
     @Test
-    void sendOtp_emptyOtp_doesNotThrow() {
-        assertDoesNotThrow(() -> smsServiceImpl.sendOtp("+1111111111", ""));
+    void sendOtp_emptyOtp_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> smsServiceImpl.sendOtp("+1111111111", ""));
     }
 }

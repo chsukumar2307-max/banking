@@ -1,5 +1,5 @@
 package com.bank.impl;
-import com.bank.security.JwtUtil;
+import com.bank.util.JwtUtil;
 import com.bank.service.impl.AccessTokenBlacklistService;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,10 +51,9 @@ class AccessTokenBlacklistServiceTest {
     }
 
     @Test
-    void blacklistToken_nullOrBlankToken_doesNothing() {
-        blacklistService.blacklistToken(null);
-        blacklistService.blacklistToken("");
-        verifyNoInteractions(valueOperations);
+    void blacklistToken_nullOrBlankToken_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> blacklistService.blacklistToken(null));
+        assertThrows(IllegalArgumentException.class, () -> blacklistService.blacklistToken(""));
     }
 
     @Test

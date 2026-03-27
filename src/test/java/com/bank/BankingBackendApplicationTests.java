@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.bank.controller.AccountController;
 import com.bank.service.AccountService;
 import com.bank.controller.AuthController;
-import com.bank.security.JwtAuthenticationFilter;
+import com.bank.util.JwtAuthenticationFilter;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BankingBackendApplicationTests {

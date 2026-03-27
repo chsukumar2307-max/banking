@@ -35,18 +35,20 @@ public class SmsServiceImpl implements SmsService {
     public void sendOtp(String phone, String otp) {
         if (!isValid(phone, otp)) {
             logWarnInvalidInput(phone, otp);
-            return;
+            throw new IllegalArgumentException("Phone number or OTP is blank, cannot send SMS.");
         }
         if (simulateSms) {
             log.info("[SIMULATION] OTP SMS to {}: {}", phone, otp);
-            return;
+            return; // Simulation is a valid exit, no exception needed
         }
         try {
             sendViaTwilio(phone, otp);
         } catch (IllegalArgumentException e) {
             log.error("Invalid phone number format for {}: {}", phone, e.getMessage());
+            throw e;
         } catch (Exception e) {
             log.error("Failed to send OTP SMS to {} via Twilio. Error: {}", phone, e.getMessage(), e);
+            throw new RuntimeException("Failed to send OTP SMS", e);
         }
     }
 

@@ -11,4 +11,14 @@ import java.math.BigDecimal;
 public class DepositResponse {
     private String status;
     private BigDecimal balance;
+    private String message;
+
+    public DepositResponse(String status, BigDecimal balance) {
+        this.status = status;
+        this.balance = balance;
+    }
+
+    public DepositResponse(String message) {
+        this.message = message;
+    }
 }

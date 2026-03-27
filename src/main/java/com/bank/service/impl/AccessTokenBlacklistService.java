@@ -1,5 +1,5 @@
 package com.bank.service.impl;
-import com.bank.security.JwtUtil;
+import com.bank.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class AccessTokenBlacklistService {
     public void blacklistToken(String token) {
         if (!StringUtils.hasText(token)) {
             log.warn("Attempted to blacklist a null or blank token.");
-            return;
+            throw new IllegalArgumentException("Cannot blacklist a null or blank token.");
         }
         try {
             Date expiration = Optional.ofNullable(jwtUtil.parseClaims(token))
@@ -48,7 +48,7 @@ public class AccessTokenBlacklistService {
 
             if (expiration == null) {
                 log.warn("Token does not have an expiration date and cannot be blacklisted: {}", token);
-                return;
+                throw new IllegalArgumentException("Token does not have an expiration date and cannot be blacklisted.");
             }
 
             long expiryMillis = expiration.getTime() - System.currentTimeMillis();

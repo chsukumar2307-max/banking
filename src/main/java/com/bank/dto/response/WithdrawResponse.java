@@ -11,4 +11,14 @@ import java.math.BigDecimal;
 public class WithdrawResponse {
 	private String status;
 	private BigDecimal balance;
+	private String message;
+
+	public WithdrawResponse(String status, BigDecimal balance) {
+		this.status = status;
+		this.balance = balance;
+	}
+
+	public WithdrawResponse(String message) {
+		this.message = message;
+	}
 }

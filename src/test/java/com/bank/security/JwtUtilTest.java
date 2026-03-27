@@ -1,4 +1,5 @@
 package com.bank.security;
+import com.bank.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,11 +10,12 @@ class JwtUtilTest {
     private JwtUtil jwtUtil;
     private final String secret = "testsecretkeytestsecretkeytestsecretkeytestsecretkey";
     private final String issuer = "test-issuer";
-    private final long expirationMinutes = 1;
+    private final long refreshExpirationMinutes = 7 * 24 * 60; // 7 days
 
     @BeforeEach
     void setUp() {
-        jwtUtil = new JwtUtil(secret, issuer, expirationMinutes);
+        long expirationMinutes = 1;
+        jwtUtil = new JwtUtil(secret, issuer, expirationMinutes, refreshExpirationMinutes);
     }
 
     @Test
@@ -39,17 +41,10 @@ class JwtUtilTest {
     }
 
     @Test
-    void isTokenValid_expiredToken_returnsFalse() {
-        JwtUtil shortLivedJwtUtil = new JwtUtil(secret, issuer, 0); // expires immediately
+    void isTokenValid_expiredToken_throwsException() {
+        JwtUtil shortLivedJwtUtil = new JwtUtil(secret, issuer, 0, refreshExpirationMinutes); // expires immediately
         String token = shortLivedJwtUtil.generateToken("user", Map.of());
-        // Instead of calling isTokenValid (which throws), catch the exception and assert expired
-        boolean expired;
-        try {
-            expired = !shortLivedJwtUtil.isTokenValid(token);
-        } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            expired = true;
-        }
-        assertTrue(expired);
+        assertThrows(com.bank.exception.JwtParseException.class, () -> shortLivedJwtUtil.isTokenValid(token));
     }
 
     @Test
