@@ -2,6 +2,7 @@ package com.bank.security;
 import com.bank.entity.Customer;
 import com.bank.enums.CustomerStatus;
 import com.bank.repository.CustomerRepository;
+import com.bank.service.impl.CustomerUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

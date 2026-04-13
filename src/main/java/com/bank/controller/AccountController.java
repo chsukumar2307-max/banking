@@ -163,10 +163,18 @@ public class AccountController {
         }
         String key = parts[0];
         String value = parts[1];
+        if (isBlank(key)) {
+            log.warn("Transaction history filter key is blank: key='{}', value='{}'", key, value);
+            return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(List.of());
+        }
         List<TransactionResponse> results;
         try {
             switch (key) {
                 case "transactionId":
+                    if (isBlank(value)) {
+                        log.warn("transactionId filter value is blank");
+                        return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(List.of());
+                    }
                     results = handleTransactionIdFilter(value);
                     if (results == null) {
                         // If invalid number, treat as bad request (test expects 400)
@@ -174,9 +182,11 @@ public class AccountController {
                     }
                     break;
                 case "accountNumber":
+                    // Allow empty value, return empty list (HTTP 200)
                     results = accountService.searchTransactions(null, value, null, null, 0, 10);
                     break;
                 case "transactionType":
+                    // Allow empty value, return empty list (HTTP 200)
                     results = accountService.searchTransactions(null, null, null, value, 0, 10);
                     break;
                 default:

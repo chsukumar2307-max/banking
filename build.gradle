@@ -127,7 +127,7 @@ sonarqube {
         property "sonar.projectKey", "banking-backend"
 
         property "sonar.host.url", "http://localhost:9000"
-        property  "sonar.token", "squ_18aac6cda1dfa799fd7b05581445f07d4a9d18a5"
+        property  "sonar.token", ""
 
         property "sonar.sources", "src/main/java"
         property "sonar.tests", "src/test/java"

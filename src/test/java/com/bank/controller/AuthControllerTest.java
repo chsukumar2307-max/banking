@@ -2,6 +2,7 @@ package com.bank.controller;
 import com.bank.dto.request.*;
 import com.bank.dto.response.*;
 import com.bank.service.AuthService;
+import com.bank.service.impl.CustomerUserDetailsService;
 import com.bank.util.JwtAuthenticationFilter;
 import com.bank.util.JwtUtil;
 import com.bank.service.RefreshTokenService;
@@ -44,7 +45,7 @@ class AuthControllerTest {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     @SuppressWarnings("unused")
     @MockBean
-    private com.bank.security.CustomerUserDetailsService customerUserDetailsService;
+    private CustomerUserDetailsService customerUserDetailsService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test

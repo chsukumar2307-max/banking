@@ -1,4 +1,5 @@
 package com.bank.security;
+import com.bank.service.impl.CustomerUserDetailsService;
 import com.bank.util.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
